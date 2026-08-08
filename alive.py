@@ -17,11 +17,15 @@ except FileNotFoundError:
     exit(1)
 
 if not subd:
-    print("Error: No subdomains found in the input file.")
+    print("No subdomains found.")
     exit(1)
 
 res = subprocess.run(
-    ["httpx", "-silent", "-status-code", "-title"],
+    [
+        "httpx-toolkit",
+        "-silent",
+        "-status-code"
+    ],
     input="\n".join(subd),
     text=True,
     capture_output=True
@@ -32,21 +36,18 @@ if res.returncode != 0:
     print(res.stderr)
     exit(1)
 
+# Keep only HTTP 200 and 403 responses
 alive = [
     line.strip()
     for line in res.stdout.splitlines()
-    if line.strip()
+    if "[200]" in line or "[403]" in line
 ]
 
-try:
-    with open(output_file, "w") as f:
-        f.write("\n".join(alive))
-except OSError as e:
-    print(f"Error writing output file: {e}")
-    exit(1)
+with open(output_file, "w") as f:
+    f.write("\n".join(alive))
 
 print("\n--- Results ---")
-print(f"Total unique subdomains : {len(subd)}")
-print(f"Alive hosts             : {len(alive)}")
-print(f"Unresponsive hosts      : {len(subd) - len(alive)}")
-print(f"Results saved to        : {output_file}")
+print(f"Total subdomains : {len(subd)}")
+print(f"200/403 hosts    : {len(alive)}")
+print(f"Other/unreachable: {len(subd) - len(alive)}")
+print(f"Results saved to  : {output_file}")
