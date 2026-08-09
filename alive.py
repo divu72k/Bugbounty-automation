@@ -77,7 +77,12 @@ nuclei = subprocess.run(
     [
         "nuclei",
         "-l", clean_file,
-        "-as"
+        "-as",
+        "-s", "info,low,medium,high,critical",
+        "-rl", "50",
+        "-c", "25",
+        "-jsonl",
+        "-o", "nuclei-results.jsonl"
     ],
     text=True
 )
