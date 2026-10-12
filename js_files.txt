@@ -10,7 +10,7 @@ class Parser(HTMLParser):
         if tag.lower() == "script":
             src = dict(attrs).get("src")
             if src:
-                print(urljoin("https://www.freshbus.com/", src))
+                print(urljoin("https://www.target.com/", src))
 
 Parser().feed(sys.stdin.read())
 ' |
@@ -32,7 +32,7 @@ class Parser(HTMLParser):
         if tag.lower() == "script":
             src = dict(attrs).get("src")
             if src:
-                print(urljoin("https://www.freshbus.com/", src))
+                print(urljoin("https://www.target.com/", src))
 
 Parser().feed(sys.stdin.read())
 ' |
