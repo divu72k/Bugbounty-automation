@@ -1,0 +1,43 @@
+//to check the files for any hidden URLs
+curl -sL https://www.target.com/ |
+python3 -c '
+from html.parser import HTMLParser
+from urllib.parse import urljoin
+import sys
+
+class Parser(HTMLParser):
+    def handle_starttag(self, tag, attrs):
+        if tag.lower() == "script":
+            src = dict(attrs).get("src")
+            if src:
+                print(urljoin("https://www.freshbus.com/", src))
+
+Parser().feed(sys.stdin.read())
+' |
+while read -r js; do
+    echo "[*] Analyzing: $js"
+    jsluice urls "$js"
+done
+
+
+//to check files for any hidden secrets
+curl -sSL https://www.target.com/ |
+python3 -c '
+from html.parser import HTMLParser
+from urllib.parse import urljoin
+import sys
+
+class Parser(HTMLParser):
+    def handle_starttag(self, tag, attrs):
+        if tag.lower() == "script":
+            src = dict(attrs).get("src")
+            if src:
+                print(urljoin("https://www.freshbus.com/", src))
+
+Parser().feed(sys.stdin.read())
+' |
+sort -u |
+while read -r js; do
+    echo "[*] Scanning: $js" >&2
+    jsluice secrets "$js"
+done
